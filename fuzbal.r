@@ -1,21 +1,37 @@
 require(dplyr)
 require(rvest)
 require(gsubfn)
+require(reshape2)
 require(ggplot2)
 
-url1 <- "http://www.betstudy.com/soccer-stats/c/england/premier-league/"
-link1 <- sprintf(url1)
-stran1 <- html_session(link1) %>% read_html(encoding = "UTF-8")
-tabela1 <- stran1 %>% html_nodes(xpath = "//table[1]") %>% .[[4]] %>% html_table()
+url3 <- "http://www.betstudy.com/soccer-stats/c/england/premier-league/"
+stran3 <- html_session(url3) %>% read_html(encoding="UTF-8")
+tab3 <- stran3 %>% html_nodes(xpath ="//table[1]") %>% .[[4]]
+tabela3 <- tab3 %>% html_table()
 
-#Chelsea
-url2 <- "http://www.betstudy.com/soccer-stats/teams/chelsea/661/"
-link2 <- sprintf(url2)
-stran2 <- html_session(link2) %>% read_html(encoding = "UTF-8")
-tabela2 <- stran2 %>% html_nodes(xpath = "//table[1]") %>% .[[4]] %>% html_table()
-tabela2[,5] <- NULL
-names(tabela2)[1] <- "Date"
-names(tabela2)[2] <- "Home Team"
-names(tabela2)[3] <- "Result"
-names(tabela2)[4] <- "Foreign Team"
+ekipe_link <- tab3 %>% html_nodes(xpath=".//a") %>% html_attr("href")
+url4 <- "http://www.betstudy.com/soccer-stats/teams/chelsea/661/squad/"
+stran4 <- html_session(url4) %>% read_html(encoding="UTF-8")
+tabela_igralcev <- stran4 %>% html_nodes(xpath ="//table[1]") %>% .[[2]] %>% html_table()
+Encoding(tabela_igralcev$Name) <- "UTF-8"
+tabela_igralcev$Ekipa <- "Chelsea"
+
+for(url in ekipe_link){
+  if(url != "/soccer-stats/teams/chelsea/661/"){
+    url5 <- paste("http://www.betstudy.com", url, sep="")
+    url5 <- paste(url5, "squad/", sep="")
+    stran5 <- html_session(url5) %>% read_html(encoding="cp1250")
+    tabela5 <- stran5 %>% html_nodes(xpath ="//table[1]") %>% .[[2]] %>% html_table()
+    Encoding(tabela5$Name) <- "UTF-8"
+    tabela5$Ekipa <- substr(url, 21, nchar(url)-5)
+    tabela_igralcev <- rbind(tabela_igralcev, tabela5)
+  }
+}  
+
+names(tabela_igralcev)[7] <- "Appearances"
+names(tabela_igralcev)[8] <- "YCards"
+names(tabela_igralcev)[9] <- "SecYCards"
+names(tabela_igralcev)[10] <- "RCards"
+names(tabela_igralcev)[12] <- "Goals"
+
 
