@@ -34,3 +34,4 @@ url_transfer <- "http://www.betstudy.com/soccer-stats/player/59416/daryl-janmaat
 stran <- html_session(url_transfer) %>% read_html(encoding="UTF-8")
 tab <- stran %>% html_nodes(xpath ="//table[1]") %>% .[[2]]
 tabela_transfer <- tab %>% html_table()
+igralci<-data.frame(tabela3$id,tabela3$Name,tabela3$Pos)
