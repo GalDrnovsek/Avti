@@ -29,7 +29,7 @@ for(url in ekipe_link){
   tabela3<-rbind(tabela3,tabela2)
   }
 }
-
+tabela3$id<-seq(1,606,1)
 url_transfer <- "http://www.betstudy.com/soccer-stats/player/59416/daryl-janmaat/"
 stran <- html_session(url_transfer) %>% read_html(encoding="UTF-8")
 tab <- stran %>% html_nodes(xpath ="//table[1]") %>% .[[2]]
