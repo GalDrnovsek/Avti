@@ -29,3 +29,5 @@ delete_table <- function(){
     dbDisconnect(conn)
   })
 }
+
+##TEST
