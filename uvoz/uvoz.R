@@ -30,6 +30,21 @@ tabelaTekma$DGol <- as.numeric(goli[,1])
 tabelaTekma$GGol <- as.numeric(goli[,2])
 tabelaTekma$Id <- c(1:length(tabelaTekma$Datum))
 tabelaTekma <- tabelaTekma[c(8,1,2,4,6,7)]
+
+#Uvoz tabele vodstvo
+
+htmlVodstvo <- html_session("https://en.wikipedia.org/wiki/2016%E2%80%9317_Premier_League")
+htmlVodstvo <- htmlVodstvo %>% html_nodes(xpath=".//*[@id='mw-content-text']/div/table[3]")
+tabelaVodstvo <- htmlVodstvo %>% html_table()
+tabelaVodstvo <- tabelaVodstvo[[1]]
+tabelaVodstvo$Manager1 <- sub('.*\\!', '', tabelaVodstvo$Manager1)
+tabelaVodstvo$Manager1 <- gsub("(caretaker)","",tabelaVodstvo$Manager1,fixed=TRUE)
+tabelaVodstvo$Captain <- sub('.*\\!', '', tabelaVodstvo$Captain)
+tabelaVodstvo$Captain <- sub('\\[.*', '', tabelaVodstvo$Captain)
+tabelaVodstvo$Captain <- sub("\\d","",tabelaVodstvo$Captain)
+tabelaVodstvo$Id <- c(1:length(tabelaVodstvo$Team))
+tabelaVodstvo <- tabelaVodstvo[c(6,1,2,3)]
+colnames(tabelaVodstvo) <- c("Id","Ekipa","Manager","Kapetan")
 #Uvoz igralcev
 
 
