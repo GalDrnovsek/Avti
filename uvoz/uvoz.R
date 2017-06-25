@@ -1,6 +1,8 @@
 
 library(dplyr)
+library(tidyr)
 library(rvest)
+library(stringr)
 
 #Uvoz ekip
 
@@ -12,7 +14,22 @@ class(tabelaEkipa$Kapaciteta)
 tabelaEkipa$Kapaciteta <- gsub(",","",tabelaEkipa$Kapaciteta,fixed=TRUE)
 tabelaEkipa$Kapaciteta <- gsub("[14]","",tabelaEkipa$Kapaciteta,fixed=TRUE)
 tabelaEkipa$Kapaciteta <- as.numeric(tabelaEkipa$Kapaciteta)
+tabelaEkipa$Id <- c(1:length(tabelaEkipa$Ekipa))
+tabelaEkipa <- tabelaEkipa[c(5,1:4)]
  
+
+#Uvoz tekem
+
+htmlTekma <- html_session("http://www.betstudy.com/soccer-stats/c/england/premier-league/d/results/2016-2017/") %>% read_html()
+htmlTekma <- htmlTekma %>% html_nodes(xpath=".//*[@id='content']/div/div[3]/table")
+tabelaTekma <- htmlTekma %>% html_table()
+tabelaTekma <- as.data.frame(tabelaTekma)
+colnames(tabelaTekma) <- c("Datum","DEkipa","Rezultat","GEkipa","")
+goli <- str_split_fixed(tabelaTekma$Rezultat, " - ", 2)
+tabelaTekma$DGol <- as.numeric(goli[,1])
+tabelaTekma$GGol <- as.numeric(goli[,2])
+tabelaTekma$Id <- c(1:length(tabelaTekma$Datum))
+tabelaTekma <- tabelaTekma[c(8,1,2,4,6,7)]
 #Uvoz igralcev
 
 
