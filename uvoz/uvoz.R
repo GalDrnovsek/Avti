@@ -1,8 +1,20 @@
-###UVOZ EKIP - PREMIER LEAGUE SQUADS
-
 
 library(dplyr)
 library(rvest)
+
+#Uvoz ekip
+
+htmlEkipa <- html_session("https://en.wikipedia.org/wiki/2016%E2%80%9317_Premier_League") %>% read_html()
+htmlEkipa <- htmlEkipa %>% html_nodes("table") %>% .[[2]]
+tabelaEkipa <- htmlEkipa %>% html_table()
+colnames(tabelaEkipa) <- c("Ekipa","Mesto","Stadion","Kapaciteta")
+class(tabelaEkipa$Kapaciteta)
+tabelaEkipa$Kapaciteta <- gsub(",","",tabelaEkipa$Kapaciteta,fixed=TRUE)
+tabelaEkipa$Kapaciteta <- gsub("[14]","",tabelaEkipa$Kapaciteta,fixed=TRUE)
+tabelaEkipa$Kapaciteta <- as.numeric(tabelaEkipa$Kapaciteta)
+ 
+#Uvoz igralcev
+
 
 #ARSENAL
 
@@ -284,11 +296,12 @@ tabelaSunderland$Pozicija[tabelaSunderland$Pozicija=="A"]<- c("Napadalec")
 tabelaSunderland$Ekipa <- c("Sunderland")
 tabelaSunderland <- tabelaSunderland[c(1,6,2,3,4,5)]
 
-###TABELA IGRALCI
+###TABELA IGRALEC
 
 Igralec <- rbind(tabelaArsenal,tabelaBurnley,tabelaBournemouth,tabelaChelsea,tabelaCrystalPalace,
                  tabelaEverton,tabelaHull,tabelaLeicester,tabelaLiverpool,tabelaManCity,tabelaManUnited,
                  tabelaMiddlesbrough,tabelaStoke,tabelaSwansea,tabelaStoke,tabelaSouthampton,tabelaSunderland,
                  tabelaTottenaham,tabelaWatford,tabelaWestHam,tabelaWba)
 Igralec$Id <- c(1:length(Igralec$Igralec))
+Igralec <- Igralec[c(7,1:6)]
 
