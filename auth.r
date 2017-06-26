@@ -659,7 +659,7 @@
       </tr>
       <tr>
         <td id="L2" class="blob-num js-line-number" data-line-number="2"></td>
-        <td id="LC2" class="blob-code blob-code-inner js-file-line">db = &#39;banka2016_uporabnik&#39;</td>
+        <td id="LC2" class="blob-code blob-code-inner js-file-line">db = &#39;banka2017_janp&#39;</td>
       </tr>
       <tr>
         <td id="L3" class="blob-num js-line-number" data-line-number="3"></td>
@@ -667,11 +667,11 @@
       </tr>
       <tr>
         <td id="L4" class="blob-num js-line-number" data-line-number="4"></td>
-        <td id="LC4" class="blob-code blob-code-inner js-file-line">user = &#39;uporabnik&#39;</td>
+        <td id="LC4" class="blob-code blob-code-inner js-file-line">user = &#39;janp&#39;</td>
       </tr>
       <tr>
         <td id="L5" class="blob-num js-line-number" data-line-number="5"></td>
-        <td id="LC5" class="blob-code blob-code-inner js-file-line">password = &#39;geslo&#39;</td>
+        <td id="LC5" class="blob-code blob-code-inner js-file-line">password = &#39;xa1nbrl8&#39;</td>
       </tr>
 </table>
 
