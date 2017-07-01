@@ -333,7 +333,7 @@ tabelaSunderland <- tabelaSunderland[c(1,6,2,3,4,5)]
 Igralec <- rbind(tabelaArsenal,tabelaBurnley,tabelaBournemouth,tabelaChelsea,tabelaCrystalPalace,
                  tabelaEverton,tabelaHull,tabelaLeicester,tabelaLiverpool,tabelaManCity,tabelaManUnited,
                  tabelaMiddlesbrough,tabelaStoke,tabelaSwansea,tabelaStoke,tabelaSouthampton,tabelaSunderland,
-                 tabelaTottenaham,tabelaWatford,tabelaWestHam,tabelaWba)
+                 tabelaTottenham,tabelaWatford,tabelaWestHam,tabelaWba)
 Igralec$Id <- c(1:length(Igralec$Igralec))
 Igralec <- Igralec[c(7,1:6)]
 
