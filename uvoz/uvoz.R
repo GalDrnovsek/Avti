@@ -1,4 +1,3 @@
-
 library(dplyr)
 library(tidyr)
 library(rvest)
@@ -16,7 +15,6 @@ tabelaEkipa$Kapaciteta <- gsub("[14]","",tabelaEkipa$Kapaciteta,fixed=TRUE)
 tabelaEkipa$Kapaciteta <- as.numeric(tabelaEkipa$Kapaciteta)
 tabelaEkipa$Id <- c(1:length(tabelaEkipa$Ekipa))
 tabelaEkipa <- tabelaEkipa[c(5,1:4)]
- 
 
 #Uvoz tekem
 
@@ -45,8 +43,8 @@ tabelaVodstvo$Captain <- sub("\\d","",tabelaVodstvo$Captain)
 tabelaVodstvo$Id <- c(1:length(tabelaVodstvo$Team))
 tabelaVodstvo <- tabelaVodstvo[c(6,1,2,3)]
 colnames(tabelaVodstvo) <- c("Id","Ekipa","Manager","Kapetan")
-#Uvoz igralcev
 
+#Uvoz igralcev
 
 #ARSENAL
 
@@ -330,10 +328,11 @@ tabelaSunderland <- tabelaSunderland[c(1,6,2,3,4,5)]
 
 ###TABELA IGRALEC
 
-Igralec <- rbind(tabelaArsenal,tabelaBurnley,tabelaBournemouth,tabelaChelsea,tabelaCrystalPalace,
-                 tabelaEverton,tabelaHull,tabelaLeicester,tabelaLiverpool,tabelaManCity,tabelaManUnited,
-                 tabelaMiddlesbrough,tabelaStoke,tabelaSwansea,tabelaStoke,tabelaSouthampton,tabelaSunderland,
-                 tabelaTottenham,tabelaWatford,tabelaWestHam,tabelaWba)
-Igralec$Id <- c(1:length(Igralec$Igralec))
-Igralec <- Igralec[c(7,1:6)]
+tabelaIgralcev <- rbind(tabelaArsenal,tabelaBurnley,tabelaBournemouth,tabelaChelsea,tabelaCrystalPalace,
+                  tabelaEverton,tabelaHull,tabelaLeicester,tabelaLiverpool,tabelaManCity,tabelaManUnited,
+                  tabelaMiddlesbrough,tabelaStoke,tabelaSwansea,tabelaStoke,tabelaSouthampton,tabelaSunderland,
+                  tabelaTottenham,tabelaWatford,tabelaWestHam,tabelaWba)
+tabelaIgralcev$Id <- c(1:length(tabelaIgralcev$Igralec))
+tabelaIgralcev <- tabelaIgralcev[c(7,1:6)]
+
 
