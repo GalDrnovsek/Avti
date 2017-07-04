@@ -3,32 +3,6 @@ library(tidyr)
 library(rvest)
 library(stringr)
 
-#Uvoz ekip
-
-htmlEkipa <- html_session("https://en.wikipedia.org/wiki/2016%E2%80%9317_Premier_League") %>% read_html()
-htmlEkipa <- htmlEkipa %>% html_nodes("table") %>% .[[2]]
-tabelaEkipa <- htmlEkipa %>% html_table()
-colnames(tabelaEkipa) <- c("Ekipa","Mesto","Stadion","Kapaciteta")
-class(tabelaEkipa$Kapaciteta)
-tabelaEkipa$Kapaciteta <- gsub(",","",tabelaEkipa$Kapaciteta,fixed=TRUE)
-tabelaEkipa$Kapaciteta <- gsub("[14]","",tabelaEkipa$Kapaciteta,fixed=TRUE)
-tabelaEkipa$Kapaciteta <- as.numeric(tabelaEkipa$Kapaciteta)
-tabelaEkipa$Id <- c(1:length(tabelaEkipa$Ekipa))
-tabelaEkipa <- tabelaEkipa[c(5,1:4)]
-
-#Uvoz tekem
-
-htmlTekma <- html_session("http://www.betstudy.com/soccer-stats/c/england/premier-league/d/results/2016-2017/") %>% read_html()
-htmlTekma <- htmlTekma %>% html_nodes(xpath=".//*[@id='content']/div/div[3]/table")
-tabelaTekma <- htmlTekma %>% html_table()
-tabelaTekma <- as.data.frame(tabelaTekma)
-colnames(tabelaTekma) <- c("Datum","DEkipa","Rezultat","GEkipa","")
-goli <- str_split_fixed(tabelaTekma$Rezultat, " - ", 2)
-tabelaTekma$DGol <- as.numeric(goli[,1])
-tabelaTekma$GGol <- as.numeric(goli[,2])
-tabelaTekma$Id <- c(1:length(tabelaTekma$Datum))
-tabelaTekma <- tabelaTekma[c(8,1,2,4,6,7)]
-
 #Uvoz tabele vodstvo
 
 htmlVodstvo <- html_session("https://en.wikipedia.org/wiki/2016%E2%80%9317_Premier_League")
@@ -42,7 +16,40 @@ tabelaVodstvo$Captain <- sub('\\[.*', '', tabelaVodstvo$Captain)
 tabelaVodstvo$Captain <- sub("\\d","",tabelaVodstvo$Captain)
 tabelaVodstvo$Id <- c(1:length(tabelaVodstvo$Team))
 tabelaVodstvo <- tabelaVodstvo[c(6,1,2,3)]
-colnames(tabelaVodstvo) <- c("Id","Ekipa","Manager","Kapetan")
+colnames(tabelaVodstvo) <- c("id","ekipa","manager","kapetan")
+vodstvo <- tabelaVodstvo
+
+#Uvoz ekip
+
+htmlEkipa <- html_session("https://en.wikipedia.org/wiki/2016%E2%80%9317_Premier_League") %>% read_html()
+htmlEkipa <- htmlEkipa %>% html_nodes("table") %>% .[[2]]
+tabelaEkipa <- htmlEkipa %>% html_table()
+colnames(tabelaEkipa) <- c("Ekipa","Mesto","Stadion","Kapaciteta")
+class(tabelaEkipa$Kapaciteta)
+tabelaEkipa$Kapaciteta <- gsub(",","",tabelaEkipa$Kapaciteta,fixed=TRUE)
+tabelaEkipa$Kapaciteta <- gsub("[14]","",tabelaEkipa$Kapaciteta,fixed=TRUE)
+tabelaEkipa$Kapaciteta <- as.numeric(tabelaEkipa$Kapaciteta)
+tabelaEkipa$Id <- c(1:length(tabelaEkipa$Ekipa))
+tabelaEkipa <- tabelaEkipa[c(5,1:4)]
+ekipa <- tabelaEkipa
+ekipa$Manager <- vodstvo$manager
+ekipa$Kapetan <- vodstvo$kapetan
+colnames(ekipa) <- c("id", "ekipa", "mesto", "stadion", "kapaciteta", "manager", "kapetan")
+
+#Uvoz tekem
+
+htmlTekma <- html_session("http://www.betstudy.com/soccer-stats/c/england/premier-league/d/results/2016-2017/") %>% read_html()
+htmlTekma <- htmlTekma %>% html_nodes(xpath=".//*[@id='content']/div/div[3]/table")
+tabelaTekma <- htmlTekma %>% html_table()
+tabelaTekma <- as.data.frame(tabelaTekma)
+colnames(tabelaTekma) <- c("Datum","DEkipa","Rezultat","GEkipa","")
+goli <- str_split_fixed(tabelaTekma$Rezultat, " - ", 2)
+tabelaTekma$DGol <- as.numeric(goli[,1])
+tabelaTekma$GGol <- as.numeric(goli[,2])
+tabelaTekma$Id <- c(1:length(tabelaTekma$Datum))
+tabelaTekma <- tabelaTekma[c(8,1,2,4,6,7)]
+tekma <- tabelaTekma
+colnames(tekma) <- c("id", "datum", "d_ekipa", "g_ekipa", "d_gol", "g_gol")
 
 #Uvoz igralcev
 
@@ -334,5 +341,7 @@ tabelaIgralcev <- rbind(tabelaArsenal,tabelaBurnley,tabelaBournemouth,tabelaChel
                   tabelaTottenham,tabelaWatford,tabelaWestHam,tabelaWba)
 tabelaIgralcev$Id <- c(1:length(tabelaIgralcev$Igralec))
 tabelaIgralcev <- tabelaIgralcev[c(7,1:6)]
+igralec <- tabelaIgralcev
+colnames(igralec) <- c("id", "igralec", "ekipa", "pozicija", "nastopi", "podaje", "goli")
 
 
