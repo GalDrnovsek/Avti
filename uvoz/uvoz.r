@@ -9,10 +9,10 @@ htmlVodstvo <- html_session("https://en.wikipedia.org/wiki/2016%E2%80%9317_Premi
 htmlVodstvo <- htmlVodstvo %>% html_nodes(xpath=".//*[@id='mw-content-text']/div/table[3]")
 tabelaVodstvo <- htmlVodstvo %>% html_table()
 tabelaVodstvo <- tabelaVodstvo[[1]]
-tabelaVodstvo$Manager1 <- sub('.*\\!', '', tabelaVodstvo$Manager1)
+tabelaVodstvo$Manager1 <- sub('.*\\!','', tabelaVodstvo$Manager1)
 tabelaVodstvo$Manager1 <- gsub("(caretaker)","",tabelaVodstvo$Manager1,fixed=TRUE)
-tabelaVodstvo$Captain <- sub('.*\\!', '', tabelaVodstvo$Captain)
-tabelaVodstvo$Captain <- sub('\\[.*', '', tabelaVodstvo$Captain)
+tabelaVodstvo$Captain <- sub('.*\\!','', tabelaVodstvo$Captain)
+tabelaVodstvo$Captain <- sub('\\[.*','', tabelaVodstvo$Captain)
 tabelaVodstvo$Captain <- sub("\\d","",tabelaVodstvo$Captain)
 tabelaVodstvo$Id <- c(1:length(tabelaVodstvo$Team))
 tabelaVodstvo <- tabelaVodstvo[c(6,1,2,3)]
@@ -35,6 +35,14 @@ ekipa <- tabelaEkipa
 ekipa$Manager <- vodstvo$manager
 ekipa$Kapetan <- vodstvo$kapetan
 colnames(ekipa) <- c("id", "ekipa", "mesto", "stadion", "kapaciteta", "manager", "kapetan")
+
+ekipa[,6] <- trimws(ekipa[,6])
+ekipa[,7] <- trimws(ekipa[,7])
+
+for(i in 1:nrow(ekipa)){
+  ekipa[i,7] <- gsub(".*\\s", paste0(substring(ekipa[i,7], 1, 1), ". "), ekipa[i,7])
+}
+
 
 #Uvoz tekem
 
@@ -235,7 +243,7 @@ tabelaStoke$Pozicija[tabelaStoke$Pozicija=="A"]<- c("Napadalec")
 tabelaStoke$Ekipa <- c("Stoke City")
 tabelaStoke <- tabelaStoke[c(1,6,2,3,4,5)]
 
-#Crstal Palace
+#Crystal Palace
 
 htmlCrystalPalace <- html_session("http://www.betstudy.com/soccer-stats/teams/crystal-palace/679/squad/?sid=12653") %>% read_html
 htmlCrystalPalace <- htmlCrystalPalace %>% html_nodes("table") %>% .[[2]]
@@ -260,7 +268,7 @@ tabelaSwansea$Pozicija[tabelaSwansea$Pozicija=="G"]<- c("Vratar")
 tabelaSwansea$Pozicija[tabelaSwansea$Pozicija=="D"]<- c("Branilec")
 tabelaSwansea$Pozicija[tabelaSwansea$Pozicija=="M"]<- c("Sredina")
 tabelaSwansea$Pozicija[tabelaSwansea$Pozicija=="A"]<- c("Napadalec")
-tabelaSwansea$Ekipa <- c("Swansea")
+tabelaSwansea$Ekipa <- c("Swansea City")
 tabelaSwansea <- tabelaSwansea[c(1,6,2,3,4,5)]
 
 #Burnley
@@ -337,11 +345,33 @@ tabelaSunderland <- tabelaSunderland[c(1,6,2,3,4,5)]
 
 tabelaIgralcev <- rbind(tabelaArsenal,tabelaBurnley,tabelaBournemouth,tabelaChelsea,tabelaCrystalPalace,
                   tabelaEverton,tabelaHull,tabelaLeicester,tabelaLiverpool,tabelaManCity,tabelaManUnited,
-                  tabelaMiddlesbrough,tabelaStoke,tabelaSwansea,tabelaStoke,tabelaSouthampton,tabelaSunderland,
+                  tabelaMiddlesbrough,tabelaStoke,tabelaSwansea,tabelaSouthampton,tabelaSunderland,
                   tabelaTottenham,tabelaWatford,tabelaWestHam,tabelaWba)
 tabelaIgralcev$Id <- c(1:length(tabelaIgralcev$Igralec))
 tabelaIgralcev <- tabelaIgralcev[c(7,1:6)]
 igralec <- tabelaIgralcev
 colnames(igralec) <- c("id", "igralec", "ekipa", "pozicija", "nastopi", "podaje", "goli")
+
+
+
+tabela1 <- inner_join(igralec, ekipa, "ekipa")
+igralec$ekipa <- tabela1$id.y
+
+tabela2 <- ekipa
+names(tabela2)[2] <- "d_ekipa"
+tabela3 <- inner_join(tekma, tabela2, "d_ekipa")
+tekma$d_ekipa <- tabela3$id.y
+
+tabela4 <- ekipa
+names(tabela4)[2] <- "g_ekipa"
+tabela5 <- inner_join(tekma, tabela4, "g_ekipa")
+tekma$g_ekipa <- tabela5$id.y
+
+tabela6 <- igralec
+names(tabela6)[2] <- "kapetan"
+tabela7 <- inner_join(ekipa, tabela6, "kapetan")
+ekipa$kapetan <- tabela7$id.y
+
+
 
 
