@@ -19,14 +19,13 @@ delete_table <- function(){
 
     # Če tabela obstaja, jo zbrišemo, ter najprej zbrišemo tiste,
     # ki se navezujejo na druge
-    dbSendQuery(conn,build_sql("DROP TABLE IF EXISTS igralec CASCADE"))
     dbSendQuery(conn,build_sql("DROP TABLE IF EXISTS ekipa CASCADE"))
+    dbSendQuery(conn,build_sql("DROP TABLE IF EXISTS igralec CASCADE"))
     dbSendQuery(conn,build_sql("DROP TABLE IF EXISTS tekma CASCADE"))
   }, finally = {
     dbDisconnect(conn)
   })
 }
-
 
 
 #Funkcija, ki ustvari tabele
@@ -39,15 +38,6 @@ create_table <- function(){
                       user = user, password = password)
     
     # Glavne tabele
-    igralec <- dbSendQuery(conn, build_sql("CREATE TABLE igralec(
-                                           id INTEGER PRIMARY KEY,
-                                           igralec TEXT,
-                                           ekipa TEXT,
-                                           pozicija TEXT,
-                                           nastopi INTEGER,
-                                           podaje INTEGER,
-                                           goli INTEGER)"))
-
     ekipa <- dbSendQuery(conn, build_sql("CREATE TABLE ekipa(
                                            id INTEGER PRIMARY KEY,
                                            ekipa TEXT,
@@ -55,19 +45,28 @@ create_table <- function(){
                                            stadion TEXT,
                                            kapaciteta INTEGER,
                                            manager TEXT,
-                                           kapetan TEXT)"))
+                                           kapetan INTEGER)"))
+    
+    igralec <- dbSendQuery(conn, build_sql("CREATE TABLE igralec(
+                                           id INTEGER PRIMARY KEY,
+                                           igralec TEXT,
+                                           ekipa INTEGER,
+                                           pozicija TEXT,
+                                           nastopi INTEGER,
+                                           podaje INTEGER,
+                                           goli INTEGER,
+                                           FOREIGN KEY(ekipa) REFERENCES ekipa(id))"))
 
     tekma <- dbSendQuery(conn, build_sql("CREATE TABLE tekma(
                                            id INTEGER PRIMARY KEY,
                                            datum DATE,
-                                           d_ekipa TEXT,
-                                           g_ekipa TEXT,
+                                           d_ekipa INTEGER REFERENCES ekipa(id),
+                                           g_ekipa INTEGER REFERENCES ekipa(id),
                                            d_gol INTEGER,
                                            g_gol INTEGER)"))
     
 
   
-    
     dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO janp WITH GRANT OPTION"))
     dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO gald WITH GRANT OPTION"))
     dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO zant WITH GRANT OPTION"))
@@ -90,8 +89,8 @@ insert_data <- function(){
     conn <- dbConnect(drv, dbname = db, host = host,
                       user = user, password = password)
     
-    dbWriteTable(conn, name="igralec", igralec, append=T, row.names=FALSE)
     dbWriteTable(conn, name="ekipa", ekipa, append=T, row.names=FALSE)
+    dbWriteTable(conn, name="igralec", igralec, append=T, row.names=FALSE)
     dbWriteTable(conn, name="tekma", tekma, append=T, row.names=FALSE)
   }, finally = {
     dbDisconnect(conn) 
