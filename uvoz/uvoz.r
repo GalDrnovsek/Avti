@@ -3,6 +3,13 @@ library(tidyr)
 library(rvest)
 library(stringr)
 
+
+team <- c("Chelsea","Tottenham Hotspur","Mancteahester City","Liverpool","Arsenal",
+          "Manchester United","Everton","Southampton","AFC Bournemouth","West Bromwich Albion","West Ham United",
+          "Leicester City","Stoke City","Crystal Palace","Swansea City","Burnley","Watford","Hull City",
+          "Middlesbrough","Sunderland")
+team <- sort(team)
+position <- c("Vratar","Branilec","Sredina","Napadalec")
 #Uvoz tabele vodstvo
 
 htmlVodstvo <- html_session("https://en.wikipedia.org/wiki/2016%E2%80%9317_Premier_League")
