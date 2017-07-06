@@ -10,6 +10,7 @@ team <- c("Chelsea","Tottenham Hotspur","Mancteahester City","Liverpool","Arsena
           "Middlesbrough","Sunderland")
 team <- sort(team)
 position <- c("Vratar","Branilec","Sredina","Napadalec")
+
 #Uvoz tabele vodstvo
 
 htmlVodstvo <- html_session("https://en.wikipedia.org/wiki/2016%E2%80%9317_Premier_League")
