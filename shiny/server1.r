@@ -3,9 +3,8 @@ library(dplyr)
 library(RPostgreSQL)
 library(datasets)
 
-source("auth.R", encoding="UTF-8")
+source("auth_public.r", encoding="UTF-8")
 source("uvoz/uvoz.r", encoding="UTF-8")
-
 
 shinyServer(
   server <- function(input, output){
@@ -14,11 +13,6 @@ shinyServer(
     conn <- src_postgres(dbname = db, host = host,
                          user = user, password = password)
     
-    
-    tabelaEkipa <- tbl(conn, "tabelaEkipa")
-    tabelaIgralcev <- tbl(conn, "tabelaIgralcev")
-    tabelaTekma <- tbl(conn, "tabelaTekma")
-    tabelaVodstvo <- tbl(conn, "tabelaVodstvo")
     
     
     output$ime1 <- renderText({c(paste0("Ime ekipe: ", input$ekipa1))})
