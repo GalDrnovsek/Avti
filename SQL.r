@@ -22,6 +22,10 @@ delete_table <- function(){
     dbSendQuery(conn,build_sql("DROP TABLE IF EXISTS ekipa CASCADE"))
     dbSendQuery(conn,build_sql("DROP TABLE IF EXISTS igralec CASCADE"))
     dbSendQuery(conn,build_sql("DROP TABLE IF EXISTS tekma CASCADE"))
+    dbSendQuery(conn,build_sql("DROP TABLE IF EXISTS tabelaekipa CASCADE"))
+    dbSendQuery(conn,build_sql("DROP TABLE IF EXISTS tabelaigralcev CASCADE"))
+    dbSendQuery(conn,build_sql("DROP TABLE IF EXISTS tabelatekma CASCADE"))
+    dbSendQuery(conn,build_sql("DROP TABLE IF EXISTS tabelavodstvo CASCADE"))
   }, finally = {
     dbDisconnect(conn)
   })
@@ -65,6 +69,36 @@ create_table <- function(){
                                            d_gol INTEGER,
                                            g_gol INTEGER)"))
     
+    tabelaekipa <- dbSendQuery(conn, build_sql("CREATE TABLE tabelaekipa(
+                                           id INTEGER PRIMARY KEY,
+                                           ekipa TEXT,
+                                           mesto TEXT,
+                                           stadion TEXT,
+                                           kapaciteta INTEGER)"))
+    
+    tabelaigralcev <- dbSendQuery(conn, build_sql("CREATE TABLE tabelaigralcev(
+                                           id INTEGER PRIMARY KEY,
+                                           igralec TEXT,
+                                           ekipa TEXT,
+                                           pozicija TEXT,
+                                           nastopi INTEGER,
+                                           podaje INTEGER,
+                                           goli INTEGER)"))
+    
+    tabelatekma <- dbSendQuery(conn, build_sql("CREATE TABLE tabelatekma(
+                                           id INTEGER PRIMARY KEY,
+                                           datum DATE,
+                                           d_ekipa TEXT,
+                                           g_ekipa TEXT,
+                                           d_gol INTEGER,
+                                           g_gol INTEGER)"))
+    
+    tabelavodstvo <- dbSendQuery(conn, build_sql("CREATE TABLE tabelavodstvo(
+                                           id INTEGER PRIMARY KEY,
+                                           ekipa TEXT,
+                                           manager TEXT,
+                                           kapetan TEXT)"))
+    
 
   
     dbSendQuery(conn, build_sql("GRANT ALL ON ALL TABLES IN SCHEMA public TO janp WITH GRANT OPTION"))
@@ -73,6 +107,9 @@ create_table <- function(){
     dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO janp WITH GRANT OPTION"))
     dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO gald WITH GRANT OPTION"))
     dbSendQuery(conn, build_sql("GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO zant WITH GRANT OPTION"))
+    
+    dbSendQuery(conn, build_sql("GRANT CONNECT ON DATABASE sem2017_gald TO javnost"))
+    dbSendQuery(conn, build_sql("GRANT SELECT ON ALL TABLES IN SCHEMA public TO javnost"))
     
   }, finally = {
     # Na koncu nujno prekinemo povezavo z bazo,
@@ -92,6 +129,10 @@ insert_data <- function(){
     dbWriteTable(conn, name="ekipa", ekipa, append=T, row.names=FALSE)
     dbWriteTable(conn, name="igralec", igralec, append=T, row.names=FALSE)
     dbWriteTable(conn, name="tekma", tekma, append=T, row.names=FALSE)
+    dbWriteTable(conn, name="tabelaekipa", tabelaekipa, append=T, row.names=FALSE)
+    dbWriteTable(conn, name="tabelaigralcev", tabelaigralcev, append=T, row.names=FALSE)
+    dbWriteTable(conn, name="tabelatekma", tabelatekma, append=T, row.names=FALSE)
+    dbWriteTable(conn, name="tabelavodstvo", tabelavodstvo, append=T, row.names=FALSE)
   }, finally = {
     dbDisconnect(conn) 
     
@@ -123,6 +164,7 @@ pravice <- function(){
     
     dbSendQuery(conn, build_sql("GRANT CONNECT ON DATABASE sem2017_gald TO javnost"))
     dbSendQuery(conn, build_sql("GRANT SELECT ON ALL TABLES IN SCHEMA public TO javnost"))
+
     
     
   }, finally = {
