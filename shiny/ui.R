@@ -42,8 +42,7 @@ shinyUI(
         h1("Odigrane tekme"),
         splitLayout(
           dataTableOutput(outputId="tekma1"),
-          dataTableOutput(outputId="tekma2")),
-        options(encoding="UTF-8")
+          dataTableOutput(outputId="tekma2"))
       )
     )
   )
