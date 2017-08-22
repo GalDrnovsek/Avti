@@ -3,7 +3,12 @@ library(dplyr)
 library(RPostgreSQL)
 library(datasets)
 
-source("uvoz/uvoz.r", encoding="UTF-8")
+team <- c("Chelsea","Tottenham Hotspur","Mancteahester City","Liverpool","Arsenal",
+          "Manchester United","Everton","Southampton","AFC Bournemouth","West Bromwich Albion","West Ham United",
+          "Leicester City","Stoke City","Crystal Palace","Swansea City","Burnley","Watford","Hull City",
+          "Middlesbrough","Sunderland")
+team <- sort(team)
+position <- c("Vratar","Branilec","Sredina","Napadalec")
 
 
 shinyUI(
@@ -37,7 +42,8 @@ shinyUI(
         h1("Odigrane tekme"),
         splitLayout(
           dataTableOutput(outputId="tekma1"),
-          dataTableOutput(outputId="tekma2"))
+          dataTableOutput(outputId="tekma2")),
+        options(encoding="UTF-8")
       )
     )
   )
