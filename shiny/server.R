@@ -68,17 +68,21 @@ shinyServer(
       validate(need(!is.null(input$ekipa1), "Izberi prvo ekipo!"))
       validate(need(length(input$pozicija) >= 1, "Izberi pozicijo!"))
       pos <- c(input$pozicija, NA) # prisilimo dplyr, da podatke predstavi kot vektor
-      tbl.igralcev %>% filter(ekipa == input$ekipa1, pozicija %in% pos) %>%
+      igralci <- tbl.igralcev %>% filter(ekipa == input$ekipa1, pozicija %in% pos) %>%
         select(igralec,pozicija,nastopi,podaje,goli) %>% data.frame()
+      Encoding(igralci$igralec) <- "UTF-8"
+      igralci
     }, options = list(searching = FALSE, paging = FALSE, encoding="UTF-8"))
     
-    
+
     output$tabela2 <- renderDataTable({
       validate(need(!is.null(input$ekipa2), "Izberi drugo ekipo!"))
       validate(need(length(input$pozicija) >= 1, "Izberi pozicijo!"))
       pos <- c(input$pozicija, NA) # prisilimo dplyr, da podatke predstavi kot vektor
-      tbl.igralcev %>% filter(ekipa == input$ekipa2, pozicija %in% pos) %>%
+      igralci <- tbl.igralcev %>% filter(ekipa == input$ekipa2, pozicija %in% pos) %>%
         select(igralec,pozicija,nastopi,podaje,goli) %>% data.frame()
+      Encoding(igralci$igralec) <- "UTF-8"
+      igralci
     }, options = list(searching = FALSE, paging = FALSE, encoding="UTF-8"))
     
     
@@ -89,7 +93,7 @@ shinyServer(
                     "Izberi začetni in končni datum!"))
       tbl.tekma %>% filter(d_ekipa == input$ekipa1 | g_ekipa == input$ekipa1,
                            datum > input$zacetek, datum < input$konec) %>%
-        select(datum, "Domači" = d_ekipa, "Gostje" = g_ekipa, "Goli domačih" = d_gol,
+        select(datum, "Domaci" = d_ekipa, "Gostje" = g_ekipa, "Goli domacih" = d_gol,
                "Goli gostov" = g_gol) %>% data.frame()
     }, options = list(searching = FALSE, paging = FALSE, encoding="UTF-8"))
     
@@ -100,7 +104,7 @@ shinyServer(
                     "Izberi začetni in končni datum!"))
       tbl.tekma %>% filter(d_ekipa == input$ekipa2 | g_ekipa == input$ekipa2,
                            datum > input$zacetek, datum < input$konec) %>%
-        select(datum, "Domači" = d_ekipa, "Gostje" = g_ekipa, "Goli domačih" = d_gol,
+        select(datum, "Domaci" = d_ekipa, "Gostje" = g_ekipa, "Goli domacih" = d_gol,
                "Goli gostov" = g_gol) %>% data.frame()
     }, options = list(searching = FALSE, paging = FALSE, encoding="UTF-8"))
     
