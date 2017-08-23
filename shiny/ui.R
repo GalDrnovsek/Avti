@@ -3,7 +3,7 @@ library(dplyr)
 library(RPostgreSQL)
 library(datasets)
 
-team <- c("Chelsea","Tottenham Hotspur","Mancteahester City","Liverpool","Arsenal",
+team <- c("Chelsea","Tottenham Hotspur","Manchester City","Liverpool","Arsenal",
           "Manchester United","Everton","Southampton","AFC Bournemouth","West Bromwich Albion","West Ham United",
           "Leicester City","Stoke City","Crystal Palace","Swansea City","Burnley","Watford","Hull City",
           "Middlesbrough","Sunderland")
@@ -47,4 +47,3 @@ shinyUI(
     )
   )
 )
-
